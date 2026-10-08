@@ -1,119 +1,173 @@
-# 2PlayerUno
-# Person1(Card Classes)
-## You have to create 4 classes
-1. Card , the base class
-2. Numbercard , derived from Card
-3. ActionCard , derived from Card
-4. WildCard , derived from Card
+# UNO Game in C++
 
-Now the details of each class ,
----
-### **Card**
-#### Attributes:
-+ color : std::string(protected)
-+ symbol : std::string(protected)
-#### Methods(all public):
-+ virtual void display() const , here display according to color and symbol, **it should not print newline**.
-+ Parametrized constructor of card
-+ std::string get_color() const
-+ std::string get_symbol() const
-+ void set_color(std::string s)
-+ virtual ~ Card(){}
----
-### **NumberCard**
-#### Attributes:
-+ None
-#### Methods(all public):
-+ Parametrised constructor using chaining to initialize the color and symbol of base class
-+ virtual ~NumberCard(){}
----
-### **ActionCard**
-#### Attributes:
-+ None
-#### Methods(all public):
-+ Parametrised constructor using chaining to initialize the color and symbol of base class
-+ virtual ~ActionCard(){}
----
-### WildCard
-#### Attributes:
-+ None
-#### Methods(all public):
-+ **a constructor that only takes symbol as input and initialises color as "Multicolor" and symbol as input for the base class** , prototype would be something like WildCard(std::string s1)
-+ **virtual void display() const override** for this just virtually overide the function display from base class and use display to display for different cases like when say the card symbol is wil or when card symbol is wild +4 or say when the color of card has went from multicolor to actual color
-    - basically these 3 cases :
-        1. Multicolor (default)
-        2. Wild with chosen color
-        3. Wild +4 with chosen color
-+ virtual ~WildCard(){}
+A simple command-line implementation of the UNO card game written in C++.
 
-### Thats all for Person 1
----
-# Person 2(Deck class)
-## You have to create 1 class which is : **Deck** , the one which will be used to play
-### I recommend you to check the classic uno cards on wikipedia before you start making the deck class
-### Now the details of class 
+The project was built primarily to practice **Object-Oriented Programming, STL containers, inheritance, dynamic memory, and basic game logic** in C++.
 
-### Deck
-#### Attributes:
-+ std::vector<Card *> d; {strictly go with vectors as arrays would make it very complex}
-#### Methods:
-+ Constructor **Deck()**
-## Deck constructor
-+ This constructor above is very important as this will make the whole deck so you work is almost all about this.
-+ So just see the offcial uno cards and for first 80 cards make the number cards double time as you can see in official wiki of uno cards and for that:
-#### Use these only 
-``` cpp
-std::vector<std::string> colors{"Red","Yellow","Green","Blue"};
-std::vector<std::string> symbols{"0","1","2","3","4","5","6","7","8","9"};
+## Features
+
+- Play UNO against a computer-controlled opponent
+- Standard UNO deck with:
+  - Number cards
+  - Skip cards
+  - Reverse cards
+  - +2 cards
+  - Wild cards
+  - Wild +4 cards
+- Randomized deck using `std::shuffle`
+- Colored terminal output using ANSI escape codes
+- Basic bot decision-making
+- Automatic deck recycling when the draw pile becomes empty
+- Player card validation
+- Wild card color selection
+- Basic handling of action cards
+
+## How It Works
+
+The game starts with two players:
+
+- **You**
+- **Computer (Bot)**
+
+Both players receive 7 cards. One card is then placed on the discard pile.
+
+On your turn, you can:
+
+1. Play a valid card.
+2. Draw a card if you have no playable card.
+3. Choose whether to play the drawn card if it is valid.
+4. Select a color when playing a Wild card.
+
+The bot uses a simple strategy to decide which card to play.
+
+The game continues until one player reaches the winning condition.
+
+## Classes
+
+### `Card`
+
+The base class for all cards.
+
+Stores the card's:
+
+- Color
+- Symbol
+
+It also provides functions for displaying and accessing card information.
+
+### `NumberCard`
+
+Represents UNO number cards.
+
+### `ActionCard`
+
+Represents:
+
+- Skip
+- Reverse
+- +2
+
+### `WildCard`
+
+Represents:
+
+- Wild
+- Wild +4
+
+It also handles the special behavior of wild cards and changing their active color.
+
+### `Deck`
+
+Responsible for:
+
+- Creating the UNO deck
+- Shuffling cards
+- Drawing cards
+- Adding cards back to the deck
+- Tracking the number of remaining cards
+
+### `Person`
+
+Represents a player's hand.
+
+Responsible for:
+
+- Adding cards
+- Playing cards
+- Checking whether a card is playable
+- Checking whether the player has playable cards
+- Displaying the player's cards
+
+## Concepts Used
+
+This project uses several C++ concepts, including:
+
+- Classes and objects
+- Inheritance
+- Polymorphism
+- Virtual functions
+- Constructors and destructors
+- Encapsulation
+- `std::vector`
+- Pointers
+- Dynamic memory allocation
+- Iterators
+- `std::shuffle`
+- Random number generation
+- Basic game-state management
+
+## Requirements
+
+- C++ compiler supporting C++11 or later
+- Terminal with ANSI escape code support
+
+## Running the Game
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd <repository-folder>
 ```
-+ To make all possible cards and each should be double (see official uno cards in wiki)
-+ And use dynamic memory alloaction to do so
-+ Now for remaining action cards use :
-#### These only
-``` cpp
-std::vector<std::string> actionsymbols{"Skip","Reverse","+2"};
+
+Compile the program:
+
+```bash
+g++ -std=c++11 main.cpp -o uno
 ```
-+ to make all posible action cards
-+ and finally make all wild cards using symbols **"Wild"** and **"Wild+4"** and symbol would of course be multicolor by default (read WildCard class default constructor above for the same)
-#### Use dynamic memory allocation for creating all cards and you have to assign each card to vetor d using .push_back();
-#### Now Deck constructor is complete
-### Back to methods
-#### Methods:
-+ **void shuffle()** :this should shuffle the deck using random seed (leave the body for this empty if you want , i will handle this one).
-+ Card *remove_top_card() : should remove top card from deck by using **.pop_back()** in vector d and return the card that was popped.
-+ Card *top_card() : return top card i.e the pointer to backmost card of vector d as we are considering back of vector to be top , cuz return type is Card * and not just Card.
-+ void add_card(Card *c) : add a card to back of d vector i.e the deck using .push_back() method
-+ int count(): return size of deck .i.e the size od d vector(d vector is the one in attributes)
-### Thats all for Person2
----
-# Person 3(Person class)
-## This is named person to show the cards in the hand of a person so this class also basically stores Card * objects just like deck but is different
-### So again the details :
-### Atributes:
-+ std::vector<Card *> d;
-### Methods(all public):
-+ bool valid_card(const Card *c1,const Card *c2) : checks if c1 card can be played on c2 card (just chec if symbol or color is same and exceptions are wild cards , like wild cards are always playable)
-+ bool any_playable_card(Card *c) : check if any card in our hand .i.e the d vector can be played or no and the card in parameter is the one to be compared with for playing(that is the discard pile card)
-+ void show_cards() : print all cards of person(i.e all cards in vector d) in a structured manner , also showing indices with each card
-+ void add_card(Card *c) : add a card * to back of person hand cards using .push_back()
-+ int number_of_cards() : return number of cards in hand i.e size of vector d.
-+ Card *play_card(int i) : this should remove the card on inputted index and return the same deleted card , nasically on playing card the card goes from person's hand but you have to return it too
-+ Card *card_index(int i) : return card at i index , do check for invalid entry tough and return nullptr for invalid entry.
----
-# Person 4 
-## This person is gonna take the main() containing game logic (I will handle this)
----
-# Finally
-# Integration Notes(some logics used in main to give you an idea of how your classes would be used and some notes)
 
-- Deck, Person, and Card classes must work with raw pointers (Card*)
-- Deck will provide cards using remove_top_card()
-- Person will store cards using add_card()
-- Game logic will use:
-    - valid_card()
-    - play_card()
-    - any_playable_card()
+Run the game:
 
-- No class should print extra newlines unless specified
-- Do NOT delete cards (game logic will manage lifecycle), Memory cleanup will be handled later / ignored for now
-- Do not change prototypes unless absolutely necessary (inform before changing)
+```bash
+./uno
+```
+
+## Project Structure
+
+The current version is implemented as a single C++ source file:
+
+```text
+.
+├── main.cpp
+└── README.md
+```
+
+## Notes
+
+This is a **small learning project** rather than a complete implementation of every official UNO rule.
+
+The main purpose of the project was to practice implementing a playable C++ program using object-oriented programming, STL containers, inheritance, pointers, and basic game logic.
+
+The bot uses a simple decision-making strategy and is not intended to be an advanced UNO AI.
+
+## Possible Improvements
+
+- Split classes into separate `.h` and `.cpp` files
+- Improve the bot's strategy
+- Add support for multiple human players
+- Improve input validation
+- Implement more complete UNO rules
+- Improve terminal UI
+- Replace raw pointers with smart pointers
+- Add automated tests
+- Improve memory management
